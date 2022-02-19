@@ -78,12 +78,20 @@ void update_switch(void *parameter){
       Serial.println(status_ground[i]);
     }
     Serial.println("----------------");
-    gas_value = analogRead(gas);
     temp_value = dht.readTemperature();
+    for(int i = 0;i<100;++i){
+      sensor_value = sensor_value + analogRead(gas);
+    }
+
+    sensor_value = sensor_value / 100.0;
+    Serial.print("sensor_value = ");
+    Serial.println(sensor_value);
+    sensor_volt = sensor_value * (3.3 /1023.0);
+    CO = 3.027*pow(2.718,1.0698*sensor_volt);
     Serial.print("temp: ");
     Serial.println(temp_value);
     Serial.print("gas: ");
-    Serial.println(gas_value);
+    Serial.println(CO);
     status_update=1;
     vTaskDelay(1000/portTICK_PERIOD_MS);
   }
